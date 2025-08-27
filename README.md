@@ -11,7 +11,16 @@ It supports conversation persistence, multiple chat threads, and automatic conve
 * **Persistent storage** – Uses SQLite + LangGraph `SqliteSaver` to save conversations.
 * **Automatic chat titles** – First user message is summarized (≤4 words) and saved as the chat name.
 * **Conversation history** – Easily switch between chats via the sidebar.
-* **Streaming responses** – AI responses stream live into the UI.
+* **Streaming responses** – AI responses stream live into the UI (see note below).
+
+---
+
+## ⚠️ Streaming Note
+
+Currently, the **Gemini models** (Google Generative AI) are **not fully compatible with streaming** in this setup.
+This may cause glitches in response streaming.
+
+👉 If you switch to **OpenAI models** (e.g., `gpt-4o-mini`), the streaming function works **smoothly and reliably**.
 
 ---
 
@@ -33,6 +42,7 @@ It supports conversation persistence, multiple chat threads, and automatic conve
 ├── backend.py                  # LangGraph + SQLite backend
 ├── chatbot.db                  # SQLite database (auto-created)
 ├── requirements.txt            # Python dependencies
+├── .gitignore                  # Ignore unnecessary files in Git
 └── README.md                   # Project documentation
 ```
 
