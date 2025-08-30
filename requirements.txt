@@ -4,3 +4,4 @@ streamlit
 python-dotenv
 langchain_google_genai
 langgraph-checkpoint-sqlite
+ddgs
