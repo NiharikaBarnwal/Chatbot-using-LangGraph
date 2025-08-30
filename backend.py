@@ -55,10 +55,17 @@ def calculator(first_num: float, second_num: float, operation: str) -> dict:
 @tool
 def get_stock_price(symbol: str) -> dict:
     """
-    Fetch the current stock price for a given ticker symbol using Alpha Vantage with API key in the URL.
+    Fetch the current stock price for a given ticker symbol using Alpha Vantage.
     """
     try:
-        url = f"https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol={symbol}&apikey=C9PE94QUEW9VWGFM"
+        api_key = os.getenv("ALPHAVANTAGE_API_KEY")
+        if not api_key:
+            return {"error": "Missing ALPHAVANTAGE_API_KEY in environment variables"}
+
+        url = (
+            f"https://www.alphavantage.co/query"
+            f"?function=GLOBAL_QUOTE&symbol={symbol}&apikey={api_key}"
+        )
         response = requests.get(url)
         return response.json()
     except Exception as e:
