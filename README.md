@@ -1,7 +1,7 @@
-# LangGraph Chatbot
+# Chatbot using Langraph
 
 An interactive **multi-conversation chatbot** built with **Streamlit**, **LangGraph**, and **SQLite**.
-It supports conversation persistence, multiple chat threads, and automatic conversation naming.
+It supports conversation persistence, multiple chat threads, **tool usage** (search, calculator, stock prices), **LangSmith tracking**, and automatic conversation naming.
 
 ---
 
@@ -11,16 +11,20 @@ It supports conversation persistence, multiple chat threads, and automatic conve
 * **Persistent storage** – Uses SQLite + LangGraph `SqliteSaver` to save conversations.
 * **Automatic chat titles** – First user message is summarized (≤4 words) and saved as the chat name.
 * **Conversation history** – Easily switch between chats via the sidebar.
-* **Streaming responses** – AI responses stream live into the UI (see note below).
+* **Streaming responses** – AI responses stream live into the UI.
+* **Tool support** –
+
+  * 🌐 Web search (DuckDuckGo)
+  * ➗ Calculator (basic arithmetic)
+  * 📈 Stock price lookup (Alpha Vantage API)
+* **LangSmith integration** – Track, debug, and monitor queries made by the chatbot.
 
 ---
 
 ## ⚠️ Streaming Note
 
-Currently, the **Gemini models** (Google Generative AI) are **not fully compatible with streaming** in this setup.
-This may cause glitches in response streaming.
-
-👉 If you switch to **OpenAI models** (e.g., `gpt-4o-mini`), the streaming function works **smoothly and reliably**.
+Gemini (`gemini-2.5-flash`) supports streaming but may behave differently compared to OpenAI models.
+👉 If you switch to **OpenAI models** (e.g., `gpt-4o-mini`), response streaming works **smoothly and reliably**.
 
 ---
 
@@ -31,6 +35,9 @@ This may cause glitches in response streaming.
 * [LangChain](https://www.langchain.com/) – Message handling
 * [SQLite](https://www.sqlite.org/) – Persistent conversation storage
 * [Google Generative AI](https://ai.google.dev/) – LLM backend (Gemini-2.5-flash)
+* [DuckDuckGo Search API](https://pypi.org/project/duckduckgo-search/) – Web search tool
+* [Alpha Vantage](https://www.alphavantage.co/) – Stock price tool
+* [LangSmith](https://smith.langchain.com/) – Query monitoring, debugging, and tracing
 
 ---
 
@@ -39,9 +46,10 @@ This may cause glitches in response streaming.
 ```
 .
 ├── frontend.py                 # Streamlit app
-├── backend.py                  # LangGraph + SQLite backend
+├── backend.py                  # LangGraph + SQLite backend + tools
 ├── chatbot.db                  # SQLite database (auto-created)
 ├── requirements.txt            # Python dependencies
+├── .env                        # API keys & environment variables
 ├── .gitignore                  # Ignore unnecessary files in Git
 └── README.md                   # Project documentation
 ```
@@ -76,6 +84,11 @@ This may cause glitches in response streaming.
 
    ```ini
    GOOGLE_API_KEY=your_google_api_key_here
+   ALPHAVANTAGE_API_KEY=your_alpha_vantage_api_key_here
+   LANGSMITH_ENDPOINT='https://api.smith.langchain.com'
+   LANGSMITH_API_KEY=your_langsmith_api_key_here
+   LANGSMITH_TRACING_V2=true
+   LANGSMITH_PROJECT=LangGraph-Chatbot
    ```
 
 ---
@@ -103,7 +116,7 @@ Open [http://localhost:8501](http://localhost:8501) in your browser. 🎉
 The app creates two tables in `chatbot.db`:
 
 * **`chat_threads`**: Stores thread IDs and chat names
-* **LangGraph checkpoint tables**: Store conversation states
+* **LangGraph checkpoint tables**: Store conversation states (messages, tool usage, etc.)
 
 ---
 
@@ -111,8 +124,10 @@ The app creates two tables in `chatbot.db`:
 
 1. Start a **new chat** from the sidebar.
 2. Type your query → Chat title is auto-generated.
-3. Chat responses stream live.
-4. Switch between past conversations in the sidebar.
+3. AI responds in real-time.
+4. If needed, the bot may use tools (search, calculator, stock lookup).
+5. Switch between past conversations in the sidebar.
+6. All queries are logged and traceable in **LangSmith dashboard**.
 
 ---
 
@@ -123,3 +138,5 @@ The app creates two tables in `chatbot.db`:
 * ✅ Dark mode toggle
 * ✅ Support for system prompts
 * ✅ Enhanced UI with markdown rendering
+* ✅ Tool usage logging & visualization
+* ✅ More tool integrations (weather, news, etc.)
