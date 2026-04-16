@@ -1,7 +1,10 @@
-langchain
-langgraph
 streamlit
 python-dotenv
-langchain_google_genai
+langgraph
 langgraph-checkpoint-sqlite
+langchain
+langchain-core
+langchain-community
+langchain-google-genai
+requests
 ddgs
